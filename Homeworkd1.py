@@ -2,15 +2,16 @@ import pygame
 import random
 
 class Circular:
-    def __init__(self, radius, x, y, vx, vy):
+    def __init__(self, radius, x, y, vx, vy, color):
         self.radius = radius
+        self.color = color  
         self.x = x
         self.y = y
         self.vx = vx
         self.vy = vy
 
-    def draw(self, screen, color):
-        pygame.draw.circle(screen, color, (self.x, self.y), self.radius)
+    def draw(self, screen):
+        pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
 
     def move(self, window_width, window_height):
         self.x += self.vx
@@ -26,24 +27,24 @@ if __name__ == "__main__":
     pygame.init()
 
     # Window settings
-    window_width = 400
-    window_height = 400
+    window_width = 800
+    window_height = 600
     screen = pygame.display.set_mode((window_width, window_height))
     pygame.display.set_caption("Multiple Circles Game")
 
     # Colors
     background_color = (0, 0, 0)  # Black
-    circle_color = (255, 255, 255)  # White
 
     # Initialize multiple circles
     circles = []
-    for _ in range(5):  # Create 5 circles
-        radius = random.randint(10, 20)
+    for _ in range(10):  # Create circles
+        radius = random.randint(10, 30)
+        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         x = random.randint(radius, window_width - radius)
         y = random.randint(radius, window_height - radius)
-        vx = random.choice([-1, 1]) * random.randint(1, 3)
-        vy = random.choice([-1, 1]) * random.randint(1, 3)
-        circles.append(Circular(radius, x, y, vx, vy))
+        vx = random.randint(-5, 8)
+        vy = random.randint(-5, 8)
+        circles.append(Circular(radius, x, y, vx, vy, color))
 
     # Clock for controlling frame rate
     clock = pygame.time.Clock()
@@ -58,7 +59,7 @@ if __name__ == "__main__":
         screen.fill(background_color)
         for circle in circles:
             circle.move(window_width, window_height)
-            circle.draw(screen, circle_color)
+            circle.draw(screen)
 
         pygame.display.flip()
 
