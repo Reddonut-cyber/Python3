@@ -1,16 +1,24 @@
 import socket
+import threading
 
 HOST = '127.0.0.1'
 PORT = 21002
 
+def send_message_function(client_socket):
+    while True:
+        message = input("Enter a message: ")
+        client_socket.send((message + "\n").encode())
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
     print("Connected to server")
 
+    send_thread = threading.Thread(target=send_message_function, args=(s,))
+    send_thread.start()
+
     while True:
-        message = input("Enter a message: ")
-        s.send((message).encode())
+        # message = input("Enter a message: ")
+        # s.send((message+"\n").encode())
 
         message_received = ""
         while True:
@@ -24,10 +32,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             else:
                 print("Connection lost!")
                 break
-        if message_received:
-            print("Received message: ", message_received)
-            s.send(("Server summarized: " + message_received[:10]).encode())
-        else:
+        if not message_received:
             break
+
+        print("Received message: ", message_received)
 
 print("Client finished")

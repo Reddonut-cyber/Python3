@@ -1,10 +1,15 @@
 import socket
 import sys
+import threading
 from pyexpat.errors import messages
 
 HOST = '0.0.0.0'
 PORT = 21002
-s = None
+
+def send_message_function(client_socket):
+    while True:
+        message = input("Enter a message: ")
+        client_socket.send((message + "\n").encode())
 
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -27,6 +32,9 @@ conn, addr = s.accept()
 with conn:
     print('Connection accepted from ', addr)
 
+    send_thread = threading.Thread(target=send_message_function, args=(conn,))
+    send_thread.start()
+    
     while True:
         message_received = ""
         while True:
@@ -34,19 +42,17 @@ with conn:
             if data:
                 print('Received data chunk from client: ', repr(data))
                 message_received += data.decode()
-                message = input("Enter a message: ")
-                s.send((message+"\n").encode())
                 if message_received.endswith("\n"):
+                    print("End of message received")
                     break
             else:
                 print("Connection lost!")
                 break
 
-        if message_received:
-            print("Received message: ", message_received)
-            conn.send(("Server summarized: " + message_received[:10] + "\n").encode())
-        else:
+        if not message_received:
             break
+
+        print("Received message: ", message_received)
 
 s.close()
 print("Server finished")
