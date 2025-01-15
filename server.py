@@ -5,7 +5,7 @@ from pyexpat.errors import messages
 
 HOST = '0.0.0.0'
 PORT = 21002
-
+#อาจจะแก้
 def send_message_function(client_socket):
     while True:
         message = input("Enter a message: ")
