@@ -18,7 +18,7 @@ def broadcast(message):
 def handle(client):
     while True:
         try:
-            message = client.recv(1024).decode()
+            message = client.recv(32).decode()
             broadcast(message)
         except:
             index = clients.index(client)
@@ -26,7 +26,7 @@ def handle(client):
             client.close()
             name = name[index]
             broadcast(f'{name} left the chat'.encode())
-            name.remove(names)
+            names.remove(name)
             break
         
 def receive():
@@ -35,7 +35,7 @@ def receive():
         print(f"Connected with {str(address)}")
         
         client.send("NICK".encode())
-        name = client.recv(1024).decode()
+        name = client.recv(32).decode()
         names.append(name)
         clients.append(client)
         

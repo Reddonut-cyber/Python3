@@ -9,7 +9,7 @@ client.connect(('127.0.0.1', 21002))
 def receive():
     while True:
         try:
-            message = client.recv(1024).decode()
+            message = client.recv(32).decode()
             if message == 'NICK':
                 client.send(name.encode())
             else:
