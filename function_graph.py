@@ -9,15 +9,15 @@ logger = logging.getLogger()
 logger.info("Program started")
 
 def f(x):
-    return x ** 2
+    return math.sin(x)
 
 pygame.init()
 
 w = 800
 h = 800
-x_max = 2
-x_min = -2
-scale = 30
+x_max = 6
+x_min = -6
+scale = 60
 step = 0.01
 
 screen = pygame.display.set_mode((w, h))
